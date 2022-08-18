@@ -1,6 +1,6 @@
 {
   "name": "@noon/rabbit-mq-rpc",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Noon Rabbit MQ RPC",
   "main": "index.js",
   "author": "Mohammad <mohamad.sleimanhaidar@gmail.com>",
