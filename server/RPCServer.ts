@@ -2,10 +2,10 @@ const RPCEntity = require("../lib/RPCEntity");
 
 class RPCServer extends RPCEntity {
   constructor(options) {
-    const { taskHandler, queue, ...entityOptions } = options;
+    const { handleMessage, queue, ...entityOptions } = options;
 
     super(entityOptions);
-    this.taskHandler = taskHandler;
+    this.handleMessage = handleMessage;
     this.queue = queue;
   }
 
@@ -26,18 +26,18 @@ class RPCServer extends RPCEntity {
         await ch.prefetch(1);
         await ch.consume(
           this.queue,
-          RPCServer.reply.bind(this, ch, this.taskHandler)
+          RPCServer.reply.bind(this, ch, this.handleMessage)
         );
       },
     });
   }
 
-  static async reply(ch, taskHandler, msg) {
-    console.log("maybe answer in server : " + JSON.parse(msg.content));
+  static async reply(ch, handleMessage, msg) {
+    // console.log("maybe answer in server : " + JSON.parse(msg.content));
 
     const [task, params] = JSON.parse(msg.content);
     try {
-      const response = await taskHandler(task, params);
+      const response = await handleMessage(task, params);
       ch.sendToQueue(
         msg.properties.replyTo,
         Buffer.from(JSON.stringify([response])),
