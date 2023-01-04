@@ -57,17 +57,17 @@ class RPCClient extends RPCEntity {
       console.log("QUEUE NAME IN RPC:", queue)
       console.log("TASK NAME IN RPC:", task)
 
-      if(task !== "UPLOAD_IMAGE"){
-        ch.sendToQueue(queue, Buffer.from(JSON.stringify([task, params])), {
-          correlationId: corrId,
-          replyTo: responseQueue,
-        });
-      }else {
-        ch.sendToQueue(queue, Buffer.from(JSON.stringify([task, params])), {
-          correlationId: corrId,
-          replyTo: responseQueue,
-        });
-      }
+      // if (task !== "UPLOAD_IMAGE") {
+      //   ch.sendToQueue(queue, Buffer.from(JSON.stringify([task, params])), {
+      //     correlationId: corrId,
+      //     replyTo: responseQueue,
+      //   });
+      // } else {
+      //   ch.sendToQueue(queue, [task, params], {
+      //     correlationId: corrId,
+      //     replyTo: responseQueue,
+      //   });
+      // }
     });
   }
 
