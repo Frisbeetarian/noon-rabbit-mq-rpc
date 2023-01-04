@@ -42,7 +42,7 @@ class RPCClient extends RPCEntity {
 
   async rpcRequest(channel, task, params) {
     if (!this.channels.has(channel)) {
-      throw new Error("Invalid Channel, add it first");
+      throw new Error("Invalid channel");
     }
 
     const { channel: ch, queue, responseQueue } = this.channels.get(channel);
@@ -53,6 +53,10 @@ class RPCClient extends RPCEntity {
         resolve,
         reject,
       });
+
+      console.log("QUEUE NAME IN RPC:", queue)
+      console.log("TASK NAME IN RPC:", task)
+
       ch.sendToQueue(queue, Buffer.from(JSON.stringify([task, params])), {
         correlationId: corrId,
         replyTo: responseQueue,
