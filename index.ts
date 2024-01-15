@@ -1,5 +1,4 @@
-const client = require("./client");
-const server = require("./server");
+import RPCClient from "./client/RPCClient";
+import RPCServer from "./server/RPCServer";
 
-module.exports.client = client;
-module.exports.server = server;
+export { RPCClient, RPCServer };

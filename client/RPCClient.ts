@@ -18,7 +18,7 @@ class RPCClient extends RPCEntityInClient {
     super.start();
   }
 
-  async addChannel(channel: { name: any; queue: any }) {
+  async addChannel(channel: any) {
     if (!this.connection) {
       await this.start();
     }

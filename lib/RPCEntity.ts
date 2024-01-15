@@ -1,9 +1,5 @@
 // @ts-ignore
-import { IAmqpConnectionManager } from "amqp-connection-manager/dist/esm/AmqpConnectionManager";
-
 import amqp from "amqp-connection-manager";
-// import uuid from "uuid";/
-import * as uuid from "uuid";
 
 class RPCEntity {
   private connectionObject: any;
@@ -11,7 +7,7 @@ class RPCEntity {
   protected hostId: any;
   // @ts-ignore
   private connected: boolean;
-  protected connection: IAmqpConnectionManager;
+  protected connection: any;
 
   constructor(
     options: Omit<
@@ -22,7 +18,7 @@ class RPCEntity {
     const { connectionObject, hostId } = options;
 
     this.connectionObject = connectionObject;
-    this.hostId = hostId || uuid.v4();
+    this.hostId = hostId || "localhost";
     this.connected = false;
   }
   async start() {
