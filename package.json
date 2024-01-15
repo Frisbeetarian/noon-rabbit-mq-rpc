@@ -1,6 +1,6 @@
 {
   "name": "@noon/rabbit-mq-rpc",
-  "version": "0.0.29-alpha",
+  "version": "0.0.30-alpha",
   "description": "Noon Rabbit MQ RPC",
   "main": "index.ts",
   "author": "Mohammad <mohamad.sleimanhaidar@gmail.com>",
@@ -18,16 +18,17 @@
     "url": "https://github.com/Frisbeetarian/noon-rabbit-mq-rpc"
   },
   "dependencies": {
-    "amqp-connection-manager": "^4.1.6",
-    "amqplib": "^0.10.2",
-    "prettier": "^2.8.1",
-    "uuid": "^8.3.2"
+    "amqp-connection-manager": "^4.1.14",
+    "amqplib": "^0.10.3",
+    "prettier": "^3.2.2",
+    "uuid": "^9.0.1"
   },
   "devDependencies": {
-    "@types/node": "^18.7.6",
-    "nodemon": "^2.0.7",
-    "ts-node": "^10.9.1",
-    "typescript": "^4.2.4"
+    "@types/node": "^20.11.2",
+    "@types/uuid": "^9.0.7",
+    "nodemon": "^3.0.2",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.3"
   },
   "publishConfig": {
     "registry": "http://localhost:4873"

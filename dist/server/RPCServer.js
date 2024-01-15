@@ -1,5 +1,10 @@
-const RPCEntity = require("../lib/RPCEntity");
-class RPCServer extends RPCEntity {
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const RPCEntity_1 = __importDefault(require("../lib/RPCEntity"));
+class RPCServer extends RPCEntity_1.default {
     constructor(options) {
         const { handleMessage, queue, ...entityOptions } = options;
         super(entityOptions);
@@ -7,7 +12,7 @@ class RPCServer extends RPCEntity {
         this.queue = queue;
     }
     async start() {
-        super.start();
+        await super.start();
         await this.startChannel();
         await this.channel.waitForConnect();
     }
@@ -15,7 +20,7 @@ class RPCServer extends RPCEntity {
         if (this.channel) {
             return this.channel;
         }
-        this.channel = await this.connection.createChannel({
+        this.channel = this.connection.createChannel({
             setup: async (ch) => {
                 await ch.assertQueue(this.queue, { durable: false });
                 await ch.prefetch(1);
@@ -35,5 +40,5 @@ class RPCServer extends RPCEntity {
         ch.ack(msg);
     }
 }
-module.exports = RPCServer;
+exports.default = RPCServer;
 //# sourceMappingURL=RPCServer.js.map

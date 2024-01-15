@@ -1,3 +1,3 @@
-const RPCServer = require('./RPCServer')
+const RPCServerImport = require("./RPCServer");
 
-module.exports.RPCServer = RPCServer
+module.exports.RPCServer = RPCServerImport;

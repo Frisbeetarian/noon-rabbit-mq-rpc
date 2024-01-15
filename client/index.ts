@@ -1,3 +1,3 @@
-const RPCClient = require('./RPCClient')
+const RPCClientImport = require("./RPCClient");
 
-module.exports.RPCClient = RPCClient
+module.exports.RPCClient = RPCClientImport;

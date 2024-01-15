@@ -1,7 +1,11 @@
-const RPCEntity = require("../lib/RPCEntity");
+import RPCEntityInServer from "../lib/RPCEntity";
 
-class RPCServer extends RPCEntity {
-  constructor(options) {
+class RPCServer extends RPCEntityInServer {
+  private handleMessage: any;
+  private queue: any;
+  private channel: any;
+
+  constructor(options: { [x: string]: any; handleMessage: any; queue: any }) {
     const { handleMessage, queue, ...entityOptions } = options;
 
     super(entityOptions);
@@ -10,7 +14,7 @@ class RPCServer extends RPCEntity {
   }
 
   async start() {
-    super.start();
+    await super.start();
     await this.startChannel();
     await this.channel.waitForConnect();
   }
@@ -20,8 +24,12 @@ class RPCServer extends RPCEntity {
       return this.channel;
     }
 
-    this.channel = await this.connection.createChannel({
-      setup: async (ch) => {
+    this.channel = this.connection.createChannel({
+      setup: async (ch: {
+        assertQueue: (arg0: any, arg1: { durable: boolean }) => any;
+        prefetch: (arg0: number) => any;
+        consume: (arg0: any, arg1: any) => any;
+      }) => {
         await ch.assertQueue(this.queue, { durable: false });
         await ch.prefetch(1);
         await ch.consume(
@@ -32,7 +40,18 @@ class RPCServer extends RPCEntity {
     });
   }
 
-  static async reply(ch, handleMessage, msg) {
+  static async reply(
+    ch: {
+      sendToQueue: (
+        arg0: any,
+        arg1: Buffer,
+        arg2: { correlationId: any }
+      ) => void;
+      ack: (arg0: any) => void;
+    },
+    handleMessage: (arg0: any, arg1: any) => any,
+    msg: { content: string; properties: { replyTo: any; correlationId: any } }
+  ) {
     // console.log("maybe answer in server : " + JSON.parse(msg.content));
 
     const [task, params] = JSON.parse(msg.content);
@@ -54,4 +73,4 @@ class RPCServer extends RPCEntity {
   }
 }
 
-module.exports = RPCServer;
+export default RPCServer;

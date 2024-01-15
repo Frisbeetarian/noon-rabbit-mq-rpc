@@ -1,8 +1,12 @@
-const RPCEntity = require("../lib/RPCEntity");
-const uuid = require("uuid");
+import RPCEntityInClient from "../lib/RPCEntity";
 
-class RPCClient extends RPCEntity {
-  constructor(options) {
+import * as uuid from "uuid";
+// import { ChannelWrapper } from "amqp-connection-manager";
+
+class RPCClient extends RPCEntityInClient {
+  private channels: Map<any, any>;
+  private requests: Map<any, any>;
+  constructor(options: { [x: string]: any }) {
     const { ...entityOptions } = options;
 
     super(entityOptions);
@@ -14,7 +18,7 @@ class RPCClient extends RPCEntity {
     super.start();
   }
 
-  async addChannel(channel) {
+  async addChannel(channel: { name: any; queue: any }) {
     if (!this.connection) {
       await this.start();
     }
@@ -23,15 +27,24 @@ class RPCClient extends RPCEntity {
         name: channel.name,
         queue: channel.queue,
         responseQueue: `${channel.queue}.${this.hostId}`,
+        channel: channel,
       };
+
       amqChannel.channel = await this.connection.createChannel({
-        setup: async (chan) => {
+        setup: async (chan: {
+          assertQueue: (
+            arg0: string,
+            arg1: { durable?: boolean; exclusive?: boolean },
+          ) => any;
+          prefetch: (arg0: number) => any;
+          consume: (arg0: string, arg1: any) => any;
+        }) => {
           await chan.assertQueue(channel.queue, { durable: false });
           await chan.prefetch(1);
           await chan.assertQueue(amqChannel.responseQueue, { exclusive: true });
           await chan.consume(
             amqChannel.responseQueue,
-            this.maybeAnswer.bind(this, chan)
+            this.maybeAnswer.bind(this, chan),
           );
         },
       });
@@ -40,7 +53,7 @@ class RPCClient extends RPCEntity {
     return this.channels.get(channel.name);
   }
 
-  async rpcRequest(channel, task, params) {
+  async rpcRequest(channel: any, task: any, params: any) {
     if (!this.channels.has(channel)) {
       throw new Error("Invalid channel");
     }
@@ -63,7 +76,10 @@ class RPCClient extends RPCEntity {
     });
   }
 
-  maybeAnswer(ch, msg) {
+  maybeAnswer(
+    ch: { ack: (arg0: any) => void },
+    msg: { properties: { correlationId: any }; content: string },
+  ) {
     const req = this.requests.get(msg.properties.correlationId);
     if (req) {
       ch.ack(msg);
@@ -78,4 +94,4 @@ class RPCClient extends RPCEntity {
   }
 }
 
-module.exports = RPCClient;
+export default RPCClient;
