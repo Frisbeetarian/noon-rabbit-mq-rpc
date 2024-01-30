@@ -31,6 +31,6 @@
     "typescript": "^5.3.3"
   },
   "publishConfig": {
-    "registry": "http://localhost:4873"
+    "registry": "46.101.206.229:4873"
   }
 }
